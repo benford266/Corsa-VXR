@@ -36,6 +36,8 @@ float AF = 0;
 float Atmo = 0;
 float Target = TargetBoost;
 float CurKPA = MapKPA;
+float PSI = CurKPA;
+float TarPSI = TargetBoost;
 
 void setup() {
   //Serial.begin(9600); //debug uncomment to debug
@@ -80,14 +82,16 @@ void ControlPanel(){
     // Define Buttons
   uint8_t buttons = tm.readButtons();
     // Display MAP
-  tm.DisplayDecNumNibble(MapKPA, TargetBoost, true);
+    PSI = MapKPA / 6.8;
+    TarPSI = TargetBoost / 6.8;
+  tm.DisplayDecNumNibble(PSI, TarPSI, true);
 
   // Buttons
   if ( buttons == 0x80 ){
-    TargetBoost = TargetBoost + 10;
+    TargetBoost = TargetBoost + 0.2;
   }
   if ( buttons == 0x40 ){
-    TargetBoost = TargetBoost - 10;
+    TargetBoost = TargetBoost - 0.2;
   } 
 
   
