@@ -1,11 +1,11 @@
 #include <PID_v1.h>
 #include <TM1638plus.h>
-//Define Pins used for Control
+//Define Pins used for Function
 const int MapPin = A0; // Map sesnor pin
 const int MacPin = 3; // Mac valve pin
 const int WBPin = A5; // Wideband pin
 
-// Define screen
+// Define Pins for control 
 #define  STROBE_TM 4 // strobe = GPIO connected to strobe line of module
 #define  CLOCK_TM 6  // clock = GPIO connected to clock line of module
 #define  DIO_TM 7 // data = GPIO connected to data line of module
@@ -15,7 +15,7 @@ TM1638plus tm(STROBE_TM, CLOCK_TM , DIO_TM, high_freq);
 
 
 
-//Set desired boost level and define Pid variables
+//Set Base desired boost level and define Pid variables
 double TargetBoost = 230; // 250kpa is target boost level
 double MapKPA, PidPWM;// Initialise other PID variables
 const long sampleRate = 15;// Pid sample rate
@@ -51,14 +51,12 @@ void setup() {
 }
 
 void loop(){
-  Function();
-  Control();
+  BoostController();
+  ControlPanel();
 }
 
-void Function() {
+void BoostController() {
 
-
-  
   MapKPA = analogRead(MapPin) * (315.0 / 1023.0);  //Read map Pin and convert to KPA
   
   AF = ((analogRead(WBPin) * (5.0 / 1023.0)/0.625) + 10.0);//Read wideband and convert to a/f ratio
@@ -77,8 +75,8 @@ void Function() {
 
 }
 
-void Control(){
-
+void ControlPanel(){
+// Function for Control Panel 
     // Define Buttons
   uint8_t buttons = tm.readButtons();
     // Display MAP
@@ -94,4 +92,3 @@ void Control(){
 
   
 }
-
