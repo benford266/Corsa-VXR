@@ -4,15 +4,15 @@
 
 // Setup modules
 TinyGPS gps;
-SoftwareSerial ss(4, 3);
+SoftwareSerial ss(8, 9); // RX / TX <<
 
 unsigned long cycleStart, period = 100000UL, onTime = period / 2;
 const byte outPin = 13; // Output Pin to ECU / Speedo
 
 void setup()
 {
-  Serial.begin(115200);
-  ss.begin(4800);
+  Serial.begin(9600);
+  ss.begin(9600); // Begin serial comms 9600 baud
   Serial.println();
   pinMode(outPin, OUTPUT);
 }
