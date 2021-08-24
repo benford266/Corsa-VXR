@@ -1,15 +1,14 @@
+// Project: GPS to Speedo Pulse v2 Kinda works
+// Author: Ben Ford
+// Use: Simulate vehicle speed pulse using GPS speed.
+// Arduino Mega2650 / Pro Micro and NEO-6M GPS Breakout
+
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
 
 
-byte outPin = 10; // output pin
-byte level = 0; // flag to track high/low level
-unsigned long currentTime;  // could use micros also for more precise timing
-unsigned long previousTime;
-int freq = 30;
-unsigned long halfPeriod = 500; // milliseconds, or use 50000 for microseconds
-unsigned long elapsedTime;
-unsigned long cycleStart, period = 100000UL, onTime = period / 2;
+byte outPin = 10; // Pulse Output Pin
+int freq = 30; // 30Hz default
 
 
 // Setup modules
@@ -22,16 +21,14 @@ void setup(){
   Serial.begin(9600); // Debug serial uncomment if needed
   ss.begin(9600); // Begin serial comms to GPS 9600 baud
   Serial.println();
-  pinMode (outPin, OUTPUT);
+  pinMode (outPin, OUTPUT); // Setup pin for pulse output
 }
 
 
 void loop(){
   bool newData = false;
-  unsigned long chars;
-  unsigned short sentences, failed;
 
-  for (unsigned long start = millis(); millis() - start < 10;)
+  for (unsigned long start = millis(); millis() - start < 10;) // 10ms to get current gps speed 
     {
       while (ss.available())
       {
@@ -46,22 +43,15 @@ void loop(){
   if (gps.f_speed_kmph() < 2){
     Serial.println("No Pulse");
     freq = int(0);
+    noTone(outPin); // Stop pulse
   }
-  else { // Above 1mph pulse is generated and 1Hz per MPH / 3600 pulses per Mile
+  else { // Above 1mph pulse is generated and 1Hz per KPH / 3600 pulses per Kilometer
     freq  = int(gps.f_speed_kmph());
     Serial.println(gps.f_speed_kmph());
-    freq = constrain(freq, 1, 200);
+    tone(outPin, freq);
     Serial.println(freq);
   }
-  halfPeriod = (1000 / freq) / 2;
-  currentTime = millis(); // capture the current time
-  elapsedTime = currentTime - previousTime; // how much time elapsed since last pass thru loop
-  Serial.println(halfPeriod);
-  if (elapsedTime >= halfPeriod) { // time to change levels?
-    previousTime = previousTime + halfPeriod; // set up for next level change
-    level = 1 - level; // will change 1,0,1,0,1,0 ...
-    digitalWrite (outPin, level);
-  } // end time check
+ } 
 
   
-}
+
