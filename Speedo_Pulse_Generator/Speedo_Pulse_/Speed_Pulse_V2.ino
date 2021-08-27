@@ -28,7 +28,7 @@ void setup(){
 void loop(){
   bool newData = false;
 
-  for (unsigned long start = millis(); millis() - start < 10;) // 10ms to get current gps speed 
+  for (unsigned long start = millis(); millis() - start < 500;) // 500ms to get current gps speed 
     {
       while (ss.available())
       {
@@ -41,17 +41,14 @@ void loop(){
     // Pulse Generator
     // Checks if speed is below 1mph if so no pulse is generated.
   if (gps.f_speed_kmph() < 2){
-    Serial.println("No Pulse");
+    //Serial.println("No Pulse"); // Uncomment Debug
     freq = int(0);
     noTone(outPin); // Stop pulse
   }
   else { // Above 1mph pulse is generated and 1Hz per KPH / 3600 pulses per Kilometer
-    freq  = int(gps.f_speed_kmph());
-    Serial.println(gps.f_speed_kmph());
-    tone(outPin, freq);
-    Serial.println(freq);
+    freq  = int(gps.f_speed_kmph()); 
+    //Serial.println(gps.f_speed_kmph()); // Uncomment Debug
+    tone(outPin, freq); 
+    //Serial.println(freq); // Uncomment Debug
   }
- } 
-
-  
-
+ }
