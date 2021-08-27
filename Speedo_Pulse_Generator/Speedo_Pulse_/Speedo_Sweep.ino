@@ -11,7 +11,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly
   while(freq < 101){
     Serial.println(freq);
     tone(10,freq);
