@@ -1,4 +1,4 @@
-// Project: GPS to Speedo Pulse v2 Kinda works
+// Project: GPS to Speedo Pulse v2 Works
 // Author: Ben Ford
 // Use: Simulate vehicle speed pulse using GPS speed.
 // Arduino Mega2650 / Pro Micro and NEO-6M GPS Breakout
